@@ -1,60 +1,52 @@
-CREATE TABLE companies  (
+CREATE TABLE company  (
     id IDENTITY PRIMARY KEY,
     name VARCHAR(200),
     description VARCHAR(200)
 );
 
-CREATE TABLE customers (
+CREATE TABLE customer (
     id IDENTITY PRIMARY KEY,
-    name_surname VARCHAR(100),
+    first_name VARCHAR(50),
+    second_name VARCHAR(50),
     age INT,
-    CHECK(0 < age and age < 150)
+    CHECK(0 <= age and age <= 150)
 );
 
-CREATE TABLE projects (
+CREATE TABLE project (
     id IDENTITY PRIMARY KEY,
-    name VARCHAR(200),
+    name VARCHAR(200) NOT NULL,
     company_id BIGINT NOT NULL,
-    customer_id BIGINT NOT NULL
+    customer_id BIGINT NOT NULL,
+    FOREIGN KEY(company_id) REFERENCES company(id),
+    FOREIGN KEY(customer_id) REFERENCES customer(id)
 );
 
-ALTER TABLE projects
-ADD CONSTRAINT company_id_fk
-FOREIGN KEY(company_id)
-REFERENCES companies(id);
-
-ALTER TABLE projects
-ADD CONSTRAINT customer_id_fk
-FOREIGN KEY(customer_id)
-REFERENCES customers(id);
-
-CREATE TABLE developers (
+CREATE TABLE developer (
     id IDENTITY PRIMARY KEY,
-    name_surname VARCHAR(100),
+    first_name VARCHAR(50),
+    second_name VARCHAR(50),
     age INT,
     gender VARCHAR(10) NOT NULL,
-    CHECK(0 < age and age < 150),
-    CHECK(gender IN('male', 'female', 'unknown'))
+    CHECK(0 <= age and age <= 150),
+    CHECK(gender IN('male', 'female'))
 );
 
-CREATE TABLE projects_developers (
-    project_id BIGINT NOT NULL,
+CREATE TABLE project_developer (
+    project_id VARCHAR(200) NOT NULL,
     developer_id BIGINT NOT NULL,
-    PRIMARY KEY (project_id, developer_id),
-    FOREIGN KEY(project_id) REFERENCES projects(id),
-    FOREIGN KEY(developer_id) REFERENCES developers(id)
+    FOREIGN KEY(project_id) REFERENCES project(id),
+    FOREIGN KEY(developer_id) REFERENCES developer(id)
 );
 
-CREATE TABLE skills (
+CREATE TABLE skill (
     id IDENTITY PRIMARY KEY,
     department VARCHAR(50),
     skill_level VARCHAR(50)
 );
 
-CREATE TABLE developers_skills (
+CREATE TABLE developer_skill (
     developer_id BIGINT NOT NULL,
     skill_id BIGINT NOT NULL,
-    PRIMARY KEY (developer_id, skill_id),
-    FOREIGN KEY(developer_id) REFERENCES developers(id),
-    FOREIGN KEY(skill_id) REFERENCES skills(id)
+    FOREIGN KEY(developer_id) REFERENCES developer(id),
+    FOREIGN KEY(skill_id) REFERENCES skill(id)
 );

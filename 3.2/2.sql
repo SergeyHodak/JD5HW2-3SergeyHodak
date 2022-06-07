@@ -1,16 +1,7 @@
-SELECT *
-FROM projects
-WHERE id IN (
-    SELECT project_id
-    FROM projects_developers AS T1
-    INNER JOIN developers AS T2 ON T1.developer_id=T2.id
-    GROUP BY project_id
-    HAVING sum(salary) IN (
-        SELECT sum(salary) costs
-        FROM projects_developers AS T1
-        INNER JOIN developers AS T2 ON T1.developer_id=T2.id
-        GROUP BY project_id
-        ORDER BY costs DESC
-        LIMIT 1
-    )
-);
+SELECT T1.name, SUM(T3.salary) AS costs
+FROM project AS T1
+JOIN project_developer AS T2 ON T1.id=T2.project_id
+JOIN developer AS T3 ON T2.developer_id=T3.id
+GROUP BY T1.name
+ORDER BY costs DESC
+LIMIT 1;

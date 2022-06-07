@@ -1,15 +1,15 @@
-SELECT projects.COST/(
+SELECT project.COST/(
     SELECT count(developer_id)
-    FROM projects_developers
+    FROM project_developer
     WHERE project_id=id
 ) AS average_salary
-FROM projects
+FROM project
 WHERE id IN (
 SELECT id
-    FROM projects
+    FROM project
     WHERE cost IN (
         SELECT cost
-        FROM projects
+        FROM project
         ORDER BY cost
         LIMIT 1
     )
